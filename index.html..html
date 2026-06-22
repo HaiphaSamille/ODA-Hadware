@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HardwareExplorer – Objeto Digital de Aprendizagem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --blue-mid: #BFDBFE;
+    --green: #16A34A;
+    --green-light: #F0FDF4;
+    --green-mid: #BBF7D0;
+    --orange: #EA580C;
+    --orange-light: #FFF7ED;
+    --orange-mid: #FED7AA;
+    --purple: #7C3AED;
+    --purple-light: #F5F3FF;
+    --purple-mid: #DDD6FE;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --teal: #0D9488;
+    --teal-light: #F0FDFA;
+    --yellow: #CA8A04;
+    --yellow-light: #FEFCE8;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-500: #6B7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --white: #FFFFFF;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    color: var(--gray-900);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    background: #fff;
+    border-bottom: 1.5px solid var(--gray-200);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-logo span { color: var(--gray-900); }
+  .nav-links {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-500);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s;
+  }
+  .nav-links a:hover { background: var(--gray-100); color: var(--gray-900); }
+  .nav-badge {
+    background: var(--blue);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #EFF6FF 0%, #F0FDF4 50%, #FFF7ED 100%);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    border-bottom: 1.5px solid var(--gray-200);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    color: var(--gray-900);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--blue);
+  }
+  .hero p {
+    font-size: 1.05rem;
+    color: var(--gray-500);
+    max-width: 560px;
+    margin: 0 auto 2rem;
+  }
+  .hero-chips {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 2rem;
+  }
+  .chip {
+    background: #fff;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .chip svg { width: 14px; height: 14px; }
+  .hero-scroll-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    text-decoration: none;
+  }
+  .hero-scroll-btn:hover { background: #1D4ED8; transform: translateY(-1px); }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    background: var(--gray-100);
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--gray-500);
+    margin-bottom: 6px;
+  }
+  .progress-track {
+    background: var(--gray-200);
+    border-radius: 10px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    background: var(--blue);
+    height: 100%;
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.6s ease;
+  }
+
+  /* OBJETIVOS */
+  section { padding: 3.5rem 2rem; }
+  section:nth-child(even) { background: var(--gray-50); }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--blue);
+    background: var(--blue-light);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+  }
+  .section-sub {
+    color: var(--gray-500);
+    font-size: 0.95rem;
+    margin-bottom: 2rem;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* OBJETIVO CARDS */
+  .obj-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .obj-card {
+    background: #fff;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    box-shadow: var(--shadow);
+  }
+  .obj-num {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .obj-card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; }
+  .obj-card p { font-size: 0.83rem; color: var(--gray-500); line-height: 1.5; }
+  .bloom-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 6px;
+  }
+  .bloom-lembrar { background: var(--blue-mid); color: #1e40af; }
+  .bloom-compreender { background: var(--green-mid); color: #166534; }
+  .bloom-aplicar { background: var(--orange-mid); color: #9a3412; }
+  .bloom-analisar { background: var(--purple-mid); color: #5b21b6; }
+
+  /* PREREQUISITOS */
+  .prereq-grid {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  .prereq-tag {
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-700);
+  }
+
+  /* COMPONENTES NAV */
+  .comp-nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .comp-nav-btn {
+    padding: 8px 18px;
+    border: 1.5px solid var(--gray-200);
+    background: #fff;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .comp-nav-btn.active, .comp-nav-btn:hover {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+
+  /* COMPONENT CARD */
+  .comp-card {
+    background: #fff;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    display: none;
+  }
+  .comp-card.active { display: block; }
+  .comp-card-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    border-bottom: 1.5px solid var(--gray-200);
+  }
+  .comp-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+  }
+  .comp-card-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .comp-card-header p { font-size: 0.85rem; color: var(--gray-500); margin-top: 2px; }
+  .comp-card-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .comp-text { padding: 2rem; }
+  .comp-text p { font-size: 0.92rem; line-height: 1.75; color: var(--gray-700); margin-bottom: 1rem; }
+  .comp-text h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--gray-900); }
+  .comp-visual {
+    border-left: 1.5px solid var(--gray-200);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--gray-50);
+  }
+  .comp-image {
+    width: 100%;
+    max-width: 320px;
+    height: 200px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+    border: 1px solid var(--gray-200);
+    margin-bottom: 12px;
+    background: var(--gray-200);
+    display: block;
+  }
+  div.comp-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+  }
+  .comp-img-tag { font-size: 0.78rem; color: var(--gray-500); text-align: center; }
+  .spec-list {
+    list-style: none;
+    margin-top: 1rem;
+  }
+  .spec-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--gray-700);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .spec-list li:last-child { border-bottom: none; }
+  .spec-dot {
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+  }
+  .fun-fact {
+    background: var(--yellow-light);
+    border: 1.5px solid #FDE68A;
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #92400E;
+  }
+  .fun-fact strong { display: block; margin-bottom: 3px; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ANALOGIA INTERATIVA */
+  .analogy-box {
+    background: var(--purple-light);
+    border: 1.5px solid var(--purple-mid);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .analogy-box:hover { background: #EDE9FE; }
+  .analogy-icon { font-size: 2.5rem; }
+  .analogy-text h4 { font-weight: 600; font-size: 0.9rem; color: var(--purple); margin-bottom: 4px; }
+  .analogy-text p { font-size: 0.85rem; color: #5B21B6; line-height: 1.5; }
+  .analogy-hidden { display: none; margin-top: 8px; font-style: italic; }
+
+  /* QUIZ */
+  #quiz-section { background: #fff; }
+  .quiz-wrapper {
+    background: #fff;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+  .quiz-header {
+    background: var(--blue);
+    color: #fff;
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .quiz-header h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; font-weight: 700; }
+  .quiz-header p { font-size: 0.85rem; opacity: 0.85; margin-top: 2px; }
+  .quiz-progress-wrap {
+    background: rgba(255,255,255,0.2);
+    height: 4px;
+    border-radius: 10px;
+    margin-top: 12px;
+  }
+  .quiz-progress-fill {
+    background: #fff;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.4s;
+  }
+  .quiz-body { padding: 2rem; }
+  .quiz-q-num {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-500);
+    margin-bottom: 0.75rem;
+  }
+  .quiz-question {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-option {
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-size: 0.92rem;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: all 0.15s;
+    background: #fff;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+  }
+  .quiz-option:hover:not(:disabled) {
+    border-color: var(--blue);
+    background: var(--blue-light);
+    color: var(--blue);
+  }
+  .quiz-option.correct {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .quiz-option.wrong {
+    border-color: var(--red);
+    background: var(--red-light);
+    color: var(--red);
+  }
+  .quiz-feedback {
+    margin-top: 1rem;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: none;
+    line-height: 1.5;
+  }
+  .quiz-feedback.correct-fb { background: var(--green-light); border: 1.5px solid var(--green-mid); color: #166534; }
+  .quiz-feedback.wrong-fb { background: var(--red-light); border: 1.5px solid #FECACA; color: var(--red); }
+  .quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-100);
+  }
+  .quiz-nav-score {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+  }
+  .btn-next {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: none;
+    font-family: 'Inter', sans-serif;
+  }
+  .btn-next:hover { background: #1D4ED8; }
+  .quiz-result {
+    text-align: center;
+    padding: 3rem 2rem;
+    display: none;
+  }
+  .result-emoji { font-size: 4rem; margin-bottom: 1rem; }
+  .result-score {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 0.5rem;
+  }
+  .result-msg { font-size: 1rem; color: var(--gray-500); margin-bottom: 1.5rem; }
+  .btn-retry {
+    background: var(--blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 12px 28px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* MAPA INTERATIVO */
+  .cpu-diagram {
+    background: var(--gray-50);
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin: 1.5rem 0;
+  }
+  .cpu-diagram h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1.5rem; text-align: center; }
+  .motherboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .mb-component {
+    background: #fff;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .mb-component:hover {
+    border-color: var(--blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37,99,235,0.15);
+  }
+  .mb-component .mb-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .mb-component .mb-icon-img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid var(--gray-200);
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .mb-component .mb-name { font-size: 0.8rem; font-weight: 600; color: var(--gray-900); }
+  .mb-component .mb-brief { font-size: 0.72rem; color: var(--gray-500); margin-top: 2px; }
+  .mb-info-panel {
+    background: var(--blue-light);
+    border: 1.5px solid var(--blue-mid);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    margin-top: 1rem;
+    font-size: 0.88rem;
+    color: #1E40AF;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* GLOSSÁRIO */
+  .glossary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 1.5rem;
+  }
+  .gloss-card {
+    background: #fff;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    box-shadow: var(--shadow);
+  }
+  .gloss-term {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--blue);
+    margin-bottom: 4px;
+  }
+  .gloss-def { font-size: 0.82rem; color: var(--gray-700); line-height: 1.5; }
+
+  /* REFERÊNCIAS */
+  .ref-list { list-style: none; margin-top: 1rem; }
+  .ref-list li {
+    background: #fff;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius-sm);
+    padding: 1rem 1.25rem;
+    margin-bottom: 8px;
+    font-size: 0.87rem;
+    color: var(--gray-700);
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .ref-num {
+    background: var(--blue);
+    color: #fff;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* INFO BOX */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin: 2rem 0;
+  }
+  .info-card {
+    background: #fff;
+    border: 1.5px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    box-shadow: var(--shadow);
+  }
+  .info-card .ic-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; color: var(--gray-500); margin-bottom: 4px; }
+  .info-card .ic-val { font-size: 1rem; font-weight: 600; color: var(--gray-900); }
+
+  /* FOOTER */
+  footer {
+    background: var(--gray-900);
+    color: #fff;
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+  footer p { font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-top: 6px; }
+  footer strong { color: #fff; }
+
+  /* RESPONSIVE */
+  @media (max-width: 680px) {
+    .comp-card-body { grid-template-columns: 1fr; }
+    .comp-visual { border-left: none; border-top: 1.5px solid var(--gray-200); }
+    .obj-grid { grid-template-columns: 1fr; }
+    .motherboard-grid { grid-template-columns: repeat(2, 1fr); }
+    nav { padding: 0 1rem; }
+    section { padding: 2.5rem 1rem; }
+  }
+
+  /* SCROLL ANIMATIONS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    💻 <span>Hardware<em style="color:var(--blue)">Explorer</em></span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#objetivos">Objetivos</a></li>
+    <li><a href="#componentes">Componentes</a></li>
+    <li><a href="#mapa">Mapa</a></li>
+    <li><a href="#quiz-section">Quiz</a></li>
+    <li><a href="#referencias">Referências</a></li>
+  </ul>
+  <span class="nav-badge">Ensino Médio</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="padding: 4rem 2rem 3rem; background: linear-gradient(135deg,#EFF6FF 0%,#F0FDF4 60%,#FFF7ED 100%); border-bottom:1.5px solid var(--gray-200);">
+  <div class="hero-badge">Objeto Digital de Aprendizagem</div>
+  <h1>O que é <em>Hardware</em>?<br>Conheça os componentes<br>que fazem o computador funcionar</h1>
+  <p>Explore as peças físicas de um computador, entenda o papel de cada uma e teste seu conhecimento com atividades interativas.</p>
+  <div class="hero-chips">
+    <span class="chip">🎓 Ensino Médio</span>
+    <span class="chip">👤 Pré-req: Noções básicas de informática</span>
+    <span class="chip">⏱ ~30 minutos</span>
+    <span class="chip">🔬 6 Componentes</span>
+  </div>
+  <a href="#objetivos" class="hero-scroll-btn">Começar a aprender ↓</a>
+</section>
+
+<!-- PROGRESSO -->
+<div class="progress-bar-wrap">
+  <div class="progress-label">
+    <span>Seu progresso neste ODA</span>
+    <span id="progress-pct">0%</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<!-- IDENTIFICAÇÃO -->
+<section id="info" style="background:#fff;">
+  <div class="container fade-in">
+    <div class="section-label">📋 Identificação</div>
+    <h2 class="section-title">Sobre este material</h2>
+    <p class="section-sub">Informações do Objeto Digital de Aprendizagem</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="ic-label">Tema</div>
+        <div class="ic-val">Hardware e seus componentes</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-label">Recorte</div>
+        <div class="ic-val">Componentes internos e funções</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-label">Público-alvo</div>
+        <div class="ic-val">Ensino Médio (1º ao 3º ano)</div>
+      </div>
+      <div class="info-card">
+        <div class="ic-label">Pré-requisitos</div>
+        <div class="ic-val">Uso básico de computador</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJETIVOS -->
+<section id="objetivos" style="background: var(--gray-50);">
+  <div class="container fade-in">
+    <div class="section-label">🎯 Objetivos de Aprendizagem</div>
+    <h2 class="section-title">O que você vai aprender</h2>
+    <p class="section-sub">Ao concluir este ODA, você será capaz de:</p>
+    <div class="obj-grid">
+      <div class="obj-card">
+        <div class="obj-num">1</div>
+        <div>
+          <h3>Identificar os componentes principais de um computador</h3>
+          <p>Reconhecer e nomear as peças de hardware como CPU, RAM, HD, placa-mãe, placa de vídeo e fonte de alimentação.</p>
+          <span class="bloom-tag bloom-lembrar">Bloom: Lembrar / Compreender</span>
+        </div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">2</div>
+        <div>
+          <h3>Explicar a função de cada componente de hardware</h3>
+          <p>Descrever com suas próprias palavras o papel de cada peça no funcionamento geral do computador.</p>
+          <span class="bloom-tag bloom-compreender">Bloom: Compreender</span>
+        </div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">3</div>
+        <div>
+          <h3>Relacionar hardware e desempenho do sistema</h3>
+          <p>Associar as especificações técnicas (ex.: memória RAM e velocidade) ao comportamento do computador no dia a dia.</p>
+          <span class="bloom-tag bloom-analisar">Bloom: Analisar / Aplicar</span>
+        </div>
+      </div>
+      <div class="obj-card">
+        <div class="obj-num">4</div>
+        <div>
+          <h3>Distinguir hardware de software</h3>
+          <p>Diferenciar corretamente os componentes físicos (hardware) dos programas (software) e entender como eles se relacionam.</p>
+          <span class="bloom-tag bloom-compreender">Bloom: Compreender / Analisar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTEÚDO: COMPONENTES -->
+<section id="componentes" style="background:#fff;">
+  <div class="container">
+    <div class="section-label fade-in">🔧 Conteúdo Principal</div>
+    <h2 class="section-title fade-in">Componentes do Hardware</h2>
+    <p class="section-sub fade-in">Clique em cada componente para explorar suas características, funcionamento e curiosidades.</p>
+
+    <div class="comp-nav fade-in">
+      <button class="comp-nav-btn active" onclick="showComp('cpu', this)">🧠 Processador (CPU)</button>
+      <button class="comp-nav-btn" onclick="showComp('ram', this)">⚡ Memória RAM</button>
+      <button class="comp-nav-btn" onclick="showComp('hd', this)">💾 Armazenamento</button>
+      <button class="comp-nav-btn" onclick="showComp('mb', this)">🔌 Placa-mãe</button>
+      <button class="comp-nav-btn" onclick="showComp('gpu', this)">🖼️ Placa de Vídeo</button>
+      <button class="comp-nav-btn" onclick="showComp('psu', this)">🔋 Fonte de Energia</button>
+    </div>
+
+    <!-- CPU -->
+    <div class="comp-card active" id="card-cpu">
+      <div class="comp-card-header" style="background: linear-gradient(90deg, #EFF6FF 0%, #fff 100%);">
+        <div class="comp-icon" style="background: var(--blue-light);">🧠</div>
+        <div>
+          <h2>Processador — CPU</h2>
+          <p>Central Processing Unit · O "cérebro" do computador</p>
+        </div>
+      </div>
+      <div class="comp-card-body">
+        <div class="comp-text">
+          <p>O <strong>processador</strong>, ou CPU (Unidade Central de Processamento), é responsável por executar todas as instruções e cálculos do computador. Ele lê instruções da memória, as interpreta e produz resultados em bilhões de operações por segundo.</p>
+          <h3>Como funciona?</h3>
+          <p>A CPU opera em três etapas: <em>busca</em> (busca a instrução na memória), <em>decodificação</em> (entende o que deve ser feito) e <em>execução</em> (realiza o cálculo ou operação). Esse ciclo se repete bilhões de vezes por segundo.</p>
+          <ul class="spec-list">
+            <li><span class="spec-dot" style="background:var(--blue);"></span> Medida em <strong>GHz</strong> (gigahertz) — velocidade do clock</li>
+            <li><span class="spec-dot" style="background:var(--blue);"></span> Possui <strong>múltiplos núcleos</strong> (dual-core, quad-core, etc.)</li>
+            <li><span class="spec-dot" style="background:var(--blue);"></span> Fabricantes: <strong>Intel</strong> e <strong>AMD</strong> são os principais</li>
+            <li><span class="spec-dot" style="background:var(--blue);"></span> Gera calor → precisa de <strong>dissipador ou cooler</strong></li>
+          </ul>
+          <div class="fun-fact">
+            <strong>🔍 Curiosidade</strong>
+            O processador Intel 4004 de 1971 executava 92.000 operações por segundo. Hoje, processadores modernos executam mais de 3 bilhões por segundo!
+          </div>
+        </div>
+        <div class="comp-visual">
+          <img class="comp-image" src="https://st2.depositphotos.com/1021974/10840/i/950/depositphotos_108403698-stock-photo-generic-modern-cpu.jpg" alt="Processador CPU" style="object-fit:cover;">
+          <p class="comp-img-tag">Processador instalado no socket da placa-mãe</p>
+          <div style="margin-top: 1rem; background: #fff; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); padding: 1rem; width: 100%;">
+            <p style="font-size:0.78rem; font-weight:600; color:var(--gray-500); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">Analogia</p>
+            <p style="font-size:0.85rem; color:var(--gray-700);">Pense na CPU como o <strong>cérebro humano</strong>: ela processa informações, toma decisões e coordena todos os outros componentes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAM -->
+    <div class="comp-card" id="card-ram">
+      <div class="comp-card-header" style="background: linear-gradient(90deg, #F0FDF4 0%, #fff 100%);">
+        <div class="comp-icon" style="background: var(--green-light);">⚡</div>
+        <div>
+          <h2>Memória RAM</h2>
+          <p>Random Access Memory · Memória de trabalho do computador</p>
+        </div>
+      </div>
+      <div class="comp-card-body">
+        <div class="comp-text">
+          <p>A <strong>RAM</strong> (Memória de Acesso Aleatório) é onde o computador armazena temporariamente os dados que está usando agora. Quando você abre um programa, ele é carregado da HD/SSD para a RAM, porque a RAM é muito mais rápida.</p>
+          <h3>Por que ela é temporária?</h3>
+          <p>A RAM é uma <em>memória volátil</em>: ao desligar o computador, todos os dados da RAM são apagados. É por isso que você precisa salvar seus arquivos antes de fechar!</p>
+          <ul class="spec-list">
+            <li><span class="spec-dot" style="background:var(--green);"></span> Medida em <strong>GB</strong> (gigabytes) — 8GB, 16GB, 32GB</li>
+            <li><span class="spec-dot" style="background:var(--green);"></span> Tipos: <strong>DDR4</strong> e <strong>DDR5</strong> são os mais comuns</li>
+            <li><span class="spec-dot" style="background:var(--green);"></span> Mais RAM = mais programas abertos ao mesmo tempo</li>
+            <li><span class="spec-dot" style="background:var(--green);"></span> Muito mais rápida que HD, mais lenta que cache da CPU</li>
+          </ul>
+          <div class="fun-fact">
+            <strong>🔍 Curiosidade</strong>
+            Um smartphone de hoje tem mais memória RAM do que os computadores que foram à Lua em 1969! O computador da missão Apollo tinha apenas 4KB de RAM.
+          </div>
+        </div>
+        <div class="comp-visual">
+          <img class="comp-image" src="https://conceitos.com/wp-content/uploads/2014/04/Memoria-RAM.jpg" alt="Pente de memória RAM" style="object-fit:cover;">
+          <p class="comp-img-tag">Pente de memória RAM DDR4</p>
+          <div style="margin-top:1rem; background:#fff; border:1.5px solid var(--gray-200); border-radius:var(--radius-sm); padding:1rem; width:100%;">
+            <p style="font-size:0.78rem; font-weight:600; color:var(--gray-500); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">Analogia</p>
+            <p style="font-size:0.85rem; color:var(--gray-700);">A RAM é como a <strong>mesa de trabalho</strong>: quanto maior a mesa, mais coisas você pode ter abertas ao mesmo tempo. O HD é o armário onde tudo é guardado.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HD/SSD -->
+    <div class="comp-card" id="card-hd">
+      <div class="comp-card-header" style="background: linear-gradient(90deg, #FFF7ED 0%, #fff 100%);">
+        <div class="comp-icon" style="background: var(--orange-light);">💾</div>
+        <div>
+          <h2>Armazenamento — HD e SSD</h2>
+          <p>Hard Disk Drive / Solid State Drive · Onde os dados ficam guardados</p>
+        </div>
+      </div>
+      <div class="comp-card-body">
+        <div class="comp-text">
+          <p>O <strong>armazenamento</strong> é onde todos os seus arquivos, fotos, programas e o sistema operacional ficam guardados permanentemente, mesmo com o computador desligado. Existem dois tipos principais: HD (mecânico) e SSD (eletrônico).</p>
+          <h3>HD vs SSD — qual a diferença?</h3>
+          <p>O <strong>HD</strong> usa discos magnéticos giratórios lidos por uma agulha. O <strong>SSD</strong> não tem partes móveis e armazena dados em chips de memória flash, sendo muito mais rápido e resistente a impactos.</p>
+          <ul class="spec-list">
+            <li><span class="spec-dot" style="background:var(--orange);"></span> HD: capacidade alta, preço baixo, velocidade menor</li>
+            <li><span class="spec-dot" style="background:var(--orange);"></span> SSD: velocidade muito maior, silencioso, mais durável</li>
+            <li><span class="spec-dot" style="background:var(--orange);"></span> Capacidade medida em <strong>GB</strong> ou <strong>TB</strong></li>
+            <li><span class="spec-dot" style="background:var(--orange);"></span> Dados não são apagados ao desligar (<em>não volátil</em>)</li>
+          </ul>
+          <div class="fun-fact">
+            <strong>🔍 Curiosidade</strong>
+            Um SSD NVMe moderno pode ler dados a 7.000 MB/s. Um HD tradicional chega a cerca de 150 MB/s. A diferença é como comparar uma bicicleta com um avião!
+          </div>
+        </div>
+        <div class="comp-visual">
+          <img class="comp-image" src="https://tse4.mm.bing.net/th/id/OIP.DiEEtsONeKJhXpxwBlKf3AHaE8?cb=thfvnextfalcon2&rs=1&pid=ImgDetMain&o=7&rm=3" alt="SSD" style="object-fit:cover;">
+          <p class="comp-img-tag">SSD M.2 NVMe (esq.) e HD mecânico 3.5" (dir.)</p>
+          <div style="margin-top:1rem; background:#fff; border:1.5px solid var(--gray-200); border-radius:var(--radius-sm); padding:1rem; width:100%;">
+            <p style="font-size:0.78rem; font-weight:600; color:var(--gray-500); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">Analogia</p>
+            <p style="font-size:0.85rem; color:var(--gray-700);">O armazenamento é o <strong>armário ou gaveta</strong> do escritório: guarda tudo de forma permanente. O SSD é um armário com gavetas deslizantes rápidas; o HD é um arquivo de pastas que precisa ser folheado.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLACA-MÃE -->
+    <div class="comp-card" id="card-mb">
+      <div class="comp-card-header" style="background: linear-gradient(90deg, #F5F3FF 0%, #fff 100%);">
+        <div class="comp-icon" style="background: var(--purple-light);">🔌</div>
+        <div>
+          <h2>Placa-mãe</h2>
+          <p>Motherboard · O centro de comunicação do computador</p>
+        </div>
+      </div>
+      <div class="comp-card-body">
+        <div class="comp-text">
+          <p>A <strong>placa-mãe</strong> é a peça que conecta todos os componentes. Ela fornece os slots onde CPU, RAM e outros dispositivos são instalados, e os barramentos (trilhas elétricas) que permitem a comunicação entre eles.</p>
+          <h3>O que ela conecta?</h3>
+          <p>A placa-mãe possui slots para CPU (socket), RAM (DIMMs), placas de expansão (PCIe), armazenamento (SATA, M.2), além de conectores para USB, áudio, rede e alimentação.</p>
+          <ul class="spec-list">
+            <li><span class="spec-dot" style="background:var(--purple);"></span> Determina quais processadores e RAMs são compatíveis</li>
+            <li><span class="spec-dot" style="background:var(--purple);"></span> Contém o <strong>BIOS/UEFI</strong> — firmware de inicialização</li>
+            <li><span class="spec-dot" style="background:var(--purple);"></span> Tamanhos: ATX, Micro-ATX, Mini-ITX</li>
+            <li><span class="spec-dot" style="background:var(--purple);"></span> Define o <strong>chipset</strong> — recursos disponíveis</li>
+          </ul>
+          <div class="fun-fact">
+            <strong>🔍 Curiosidade</strong>
+            A placa-mãe tem trilhas condutoras (traços de cobre) mais finas que um fio de cabelo humano! Toda a comunicação do computador passa por essas trilhas microscópicas.
+          </div>
+        </div>
+        <div class="comp-visual">
+          <img class="comp-image" src="https://images.tcdn.com.br/img/img_prod/740836/placa_mae_asus_prime_mini_itx_h510t_ddr4_lga_1200_oem_14833_1_002e2530740fb36ea0452157f61b0a6c.jpg" alt="Placa-mãe ATX" style="object-fit:cover;">
+          <p class="comp-img-tag">Placa-mãe ATX com slots de RAM e socket da CPU visíveis</p>
+          <div style="margin-top:1rem; background:#fff; border:1.5px solid var(--gray-200); border-radius:var(--radius-sm); padding:1rem; width:100%;">
+            <p style="font-size:0.78rem; font-weight:600; color:var(--gray-500); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">Analogia</p>
+            <p style="font-size:0.85rem; color:var(--gray-700);">A placa-mãe é como o <strong>esqueleto humano e o sistema nervoso juntos</strong>: sustenta todos os órgãos (componentes) e transmite os sinais entre eles.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GPU -->
+    <div class="comp-card" id="card-gpu">
+      <div class="comp-card-header" style="background: linear-gradient(90deg, #F0FDFA 0%, #fff 100%);">
+        <div class="comp-icon" style="background: var(--teal-light);">🖼️</div>
+        <div>
+          <h2>Placa de Vídeo — GPU</h2>
+          <p>Graphics Processing Unit · Responsável pela imagem na tela</p>
+        </div>
+      </div>
+      <div class="comp-card-body">
+        <div class="comp-text">
+          <p>A <strong>GPU</strong> (Unidade de Processamento Gráfico) processa e renderiza imagens, vídeos e gráficos 3D. Ela libera a CPU desse trabalho pesado, sendo especializada em cálculos paralelos em grande escala.</p>
+          <h3>GPU integrada vs dedicada</h3>
+          <p>Muitas CPUs possuem <em>GPU integrada</em> — suficiente para tarefas básicas. Para jogos, design 3D ou inteligência artificial, usa-se uma <em>GPU dedicada</em> (placa de vídeo separada), com sua própria VRAM.</p>
+          <ul class="spec-list">
+            <li><span class="spec-dot" style="background:var(--teal);"></span> Fabricantes: <strong>NVIDIA</strong> (GeForce) e <strong>AMD</strong> (Radeon)</li>
+            <li><span class="spec-dot" style="background:var(--teal);"></span> Possui <strong>VRAM</strong> — memória exclusiva para gráficos</li>
+            <li><span class="spec-dot" style="background:var(--teal);"></span> Usada em jogos, edição de vídeo e IA</li>
+            <li><span class="spec-dot" style="background:var(--teal);"></span> Conecta ao monitor via HDMI, DisplayPort ou VGA</li>
+          </ul>
+          <div class="fun-fact">
+            <strong>🔍 Curiosidade</strong>
+            Uma GPU de alto desempenho atual possui mais de 10.000 núcleos de processamento paralelo. Compare com uma CPU, que tem em média 8 a 24 núcleos!
+          </div>
+        </div>
+        <div class="comp-visual">
+          <img class="comp-image" src="https://images.tcdn.com.br/img/img_prod/740836/placa_de_video_gpu_rx_550_4gb_gddr5_128_bits_single_fan_graffiti_series_pcyes_23971_3_ef2337f5ba9a5a6018320ade8edf6bbe.png" alt="Placa de vídeo GPU" style="object-fit:cover;">
+          <p class="comp-img-tag">Placa de vídeo dedicada com cooler duplo</p>
+          <div style="margin-top:1rem; background:#fff; border:1.5px solid var(--gray-200); border-radius:var(--radius-sm); padding:1rem; width:100%;">
+            <p style="font-size:0.78rem; font-weight:600; color:var(--gray-500); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">Analogia</p>
+            <p style="font-size:0.85rem; color:var(--gray-700);">A GPU é como um <strong>artista especializado</strong>: enquanto a CPU cuida de tudo, a GPU se concentra exclusivamente em criar as imagens que você vê na tela, muito mais rápido.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FONTE -->
+    <div class="comp-card" id="card-psu">
+      <div class="comp-card-header" style="background: linear-gradient(90deg, #FEFCE8 0%, #fff 100%);">
+        <div class="comp-icon" style="background: var(--yellow-light);">🔋</div>
+        <div>
+          <h2>Fonte de Alimentação — PSU</h2>
+          <p>Power Supply Unit · Converte a energia elétrica para o computador</p>
+        </div>
+      </div>
+      <div class="comp-card-body">
+        <div class="comp-text">
+          <p>A <strong>fonte de alimentação</strong> converte a corrente alternada (CA) da tomada em corrente contínua (CC) nas voltagens que os componentes precisam. Sem ela, nenhuma peça do computador funciona.</p>
+          <h3>Por que a potência importa?</h3>
+          <p>Cada componente consome energia. Uma fonte com potência insuficiente pode causar instabilidade, desligamentos aleatórios ou danos. A unidade de medida é <em>Watts (W)</em> — quanto maior o número, mais energia ela fornece.</p>
+          <ul class="spec-list">
+            <li><span class="spec-dot" style="background:var(--yellow);"></span> Potências comuns: <strong>400W, 550W, 650W, 850W</strong></li>
+            <li><span class="spec-dot" style="background:var(--yellow);"></span> Certificação <strong>80 Plus</strong> — indica eficiência energética</li>
+            <li><span class="spec-dot" style="background:var(--yellow);"></span> Distribui voltagens: +3,3V, +5V, +12V</li>
+            <li><span class="spec-dot" style="background:var(--yellow);"></span> Modelos modulares facilitam a organização dos cabos</li>
+          </ul>
+          <div class="fun-fact">
+            <strong>🔍 Curiosidade</strong>
+            Uma fonte 80 Plus Gold perde menos de 20% de energia como calor. Uma fonte de baixa qualidade pode desperdiçar até 40% da energia que consome da tomada!
+          </div>
+        </div>
+        <div class="comp-visual">
+          <img class="comp-image" src="https://http2.mlstatic.com/D_NQ_NP_2X_683523-MLA45996779471_052021-F.jpg" alt="Fonte de alimentação PSU" style="object-fit:cover;">
+          <p class="comp-img-tag">Fonte de alimentação modular com cabos organizados</p>
+          <div style="margin-top:1rem; background:#fff; border:1.5px solid var(--gray-200); border-radius:var(--radius-sm); padding:1rem; width:100%;">
+            <p style="font-size:0.78rem; font-weight:600; color:var(--gray-500); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.05em;">Analogia</p>
+            <p style="font-size:0.85rem; color:var(--gray-700);">A fonte é o <strong>coração do computador</strong>: bombeia energia para todos os outros componentes, assim como o coração bombeia sangue para todos os órgãos do corpo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MAPA INTERATIVO -->
+<section id="mapa" style="background: var(--gray-50);">
+  <div class="container fade-in">
+    <div class="section-label">🗺️ Atividade Interativa</div>
+    <h2 class="section-title">Mapa da Placa-mãe</h2>
+    <p class="section-sub">Clique em cada componente para ver onde ele se encaixa e qual é sua função. Tente identificar todos!</p>
+
+    <div class="cpu-diagram">
+      <h3>🖥️ Resumo do conteúdo — clique nos componentes</h3>
+      <div class="motherboard-grid">
+        <div class="mb-component" onclick="showMbInfo('Processador (CPU)', 'É o cérebro do computador! Ele pensa, calcula e toma todas as decisões. Tudo que você faz no computador passa pelo processador primeiro.')">
+          <img class="mb-icon-img" src="https://st2.depositphotos.com/1021974/10840/i/950/depositphotos_108403698-stock-photo-generic-modern-cpu.jpg" alt="CPU">
+          <div class="mb-name">Processador</div>
+          <div class="mb-brief">CPU / Socket</div>
+        </div>
+        <div class="mb-component" onclick="showMbInfo('Memória RAM', 'É a memória de curto prazo do computador. Quando você abre um programa, ele vai pra RAM para funcionar mais rápido. Ao desligar o computador, tudo que estava na RAM é apagado.')">
+          <img class="mb-icon-img" src="https://conceitos.com/wp-content/uploads/2014/04/Memoria-RAM.jpg" alt="RAM">
+          <div class="mb-name">Memória RAM</div>
+          <div class="mb-brief">Slots DIMM</div>
+        </div>
+        <div class="mb-component" onclick="showMbInfo('HD / SSD', 'É onde tudo fica guardado: seus arquivos, fotos, vídeos e programas. Diferente da RAM, os dados não somem quando você desliga o computador. O SSD é bem mais rápido que o HD.')">
+          <img class="mb-icon-img" src="https://tse4.mm.bing.net/th/id/OIP.DiEEtsONeKJhXpxwBlKf3AHaE8?cb=thfvnextfalcon2&rs=1&pid=ImgDetMain&o=7&rm=3" alt="SSD">
+          <div class="mb-name">HD / SSD</div>
+          <div class="mb-brief">SATA / M.2</div>
+        </div>
+        <div class="mb-component" onclick="showMbInfo('Placa-mãe', 'É a base que conecta todas as peças do computador. Pense nela como uma cidade: ela tem as ruas (trilhas elétricas) por onde as informações circulam entre o processador, a memória e os outros componentes.')">
+          <img class="mb-icon-img" src="https://images.tcdn.com.br/img/img_prod/740836/placa_mae_asus_prime_mini_itx_h510t_ddr4_lga_1200_oem_14833_1_002e2530740fb36ea0452157f61b0a6c.jpg" alt="Placa-mãe">
+          <div class="mb-name">Placa-mãe</div>
+          <div class="mb-brief">Motherboard</div>
+        </div>
+        <div class="mb-component" onclick="showMbInfo('Placa de Vídeo (GPU)', 'É responsável por gerar tudo que você vê na tela: imagens, vídeos e jogos. Quanto melhor a placa de vídeo, mais bonito e suave fica o que aparece no monitor.')">
+          <img class="mb-icon-img" src="https://images.tcdn.com.br/img/img_prod/740836/placa_de_video_gpu_rx_550_4gb_gddr5_128_bits_single_fan_graffiti_series_pcyes_23971_3_ef2337f5ba9a5a6018320ade8edf6bbe.png" alt="GPU">
+          <div class="mb-name">Placa de Vídeo</div>
+          <div class="mb-brief">Slot PCIe x16</div>
+        </div>
+        <div class="mb-component" onclick="showMbInfo('Fonte de Alimentação', 'É o coração elétrico do computador. Ela pega a energia da tomada e distribui a quantidade certa de energia para cada peça funcionar corretamente. Sem ela, nada liga!')">
+          <img class="mb-icon-img" src="https://http2.mlstatic.com/D_NQ_NP_2X_683523-MLA45996779471_052021-F.jpg" alt="Fonte">
+          <div class="mb-name">Fonte</div>
+          <div class="mb-brief">Conector 24 pinos</div>
+        </div>
+      </div>
+      <div class="mb-info-panel" id="mb-info">
+        <span style="font-size:1.5rem;">👆</span>
+        <span>Clique em um componente acima para ver mais detalhes sobre onde e como ele se conecta.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz-section" style="background:#fff;">
+  <div class="container fade-in">
+    <div class="section-label">✏️ Atividade — Quiz</div>
+    <h2 class="section-title">Teste seus conhecimentos</h2>
+    <p class="section-sub">Responda às perguntas abaixo. Você recebe feedback imediato em cada questão.</p>
+
+    <div class="quiz-wrapper">
+      <div class="quiz-header">
+        <div>
+          <h2>Quiz: Componentes de Hardware</h2>
+          <p>8 perguntas · Feedback imediato em cada resposta</p>
+        </div>
+        <div style="text-align:right; font-size:0.85rem; opacity:0.85;">
+          <span id="q-num">Questão 1 de 8</span>
+        </div>
+        <div class="quiz-progress-wrap" style="margin-top:10px; width:100%;">
+          <div class="quiz-progress-fill" id="quiz-prog" style="width:12.5%"></div>
+        </div>
+      </div>
+
+      <div class="quiz-body" id="quiz-body">
+        <div class="quiz-q-num" id="q-label">Questão 1 de 8</div>
+        <div class="quiz-question" id="q-text">Qual componente é considerado o "cérebro" do computador, responsável por processar todas as instruções?</div>
+        <div class="quiz-options" id="q-opts"></div>
+        <div class="quiz-feedback" id="q-feedback"></div>
+        <div class="quiz-nav">
+          <span class="quiz-nav-score">Acertos: <strong id="score-display">0</strong></span>
+          <button class="btn-next" id="btn-next" onclick="nextQuestion()">Próxima pergunta →</button>
+        </div>
+      </div>
+
+      <div class="quiz-result" id="quiz-result">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <div class="result-score" id="result-score">0/8</div>
+        <div class="result-msg" id="result-msg">Confira sua pontuação abaixo!</div>
+        <div id="result-detail" style="background:var(--gray-50); border:1.5px solid var(--gray-200); border-radius:var(--radius-sm); padding:1.25rem; margin-bottom:1.5rem; text-align:left; font-size:0.88rem; line-height:1.7; color:var(--gray-700);"></div>
+        <button class="btn-retry" onclick="resetQuiz()">🔄 Tentar novamente</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSÁRIO -->
+<section id="glossario" style="background:var(--gray-50);">
+  <div class="container fade-in">
+    <div class="section-label">📖 Glossário</div>
+    <h2 class="section-title">Termos importantes</h2>
+    <p class="section-sub">Definições dos principais conceitos de hardware encontrados neste ODA.</p>
+    <div class="glossary-grid">
+      <div class="gloss-card"><div class="gloss-term">Hardware</div><div class="gloss-def">Parte física do computador — tudo que você pode tocar: teclado, monitor, placa-mãe, CPU etc.</div></div>
+      <div class="gloss-card"><div class="gloss-term">Software</div><div class="gloss-def">Parte lógica — programas e sistemas operacionais que rodam no hardware. Você não pode tocar.</div></div>
+      <div class="gloss-card"><div class="gloss-term">GHz (Gigahertz)</div><div class="gloss-def">Unidade de frequência que indica a velocidade do processador. 1 GHz = 1 bilhão de ciclos por segundo.</div></div>
+      <div class="gloss-card"><div class="gloss-term">Memória volátil</div><div class="gloss-def">Memória que perde seus dados quando o computador é desligado. Exemplo: RAM.</div></div>
+      <div class="gloss-card"><div class="gloss-term">VRAM</div><div class="gloss-def">Memória dedicada da GPU, usada para armazenar texturas, imagens e dados gráficos.</div></div>
+      <div class="gloss-card"><div class="gloss-term">Socket</div><div class="gloss-def">Encaixe físico na placa-mãe onde o processador é instalado. Define compatibilidade.</div></div>
+      <div class="gloss-card"><div class="gloss-term">PCIe</div><div class="gloss-def">Peripheral Component Interconnect Express — slot de alta velocidade para GPUs, SSDs e outras placas.</div></div>
+      <div class="gloss-card"><div class="gloss-term">Núcleo (core)</div><div class="gloss-def">Unidade de processamento dentro da CPU. Mais núcleos permitem executar mais tarefas ao mesmo tempo.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- REFERÊNCIAS -->
+<section id="referencias" style="background:#fff;">
+  <div class="container fade-in">
+    <div class="section-label">📚 Referências</div>
+    <h2 class="section-title">Fontes e referências</h2>
+    <p class="section-sub">Material de apoio utilizado na construção deste ODA.</p>
+    <ul class="ref-list">
+      <li>
+        <span class="ref-num">1</span>
+        <span>TANENBAUM, Andrew S. <strong>Organização estruturada de computadores</strong>. 5. ed. São Paulo: Pearson Prentice Hall, 2007.</span>
+      </li>
+      <li>
+        <span class="ref-num">2</span>
+        <span>PATTERSON, David A.; HENNESSY, John L. <strong>Organização e projeto de computadores</strong>. 5. ed. Rio de Janeiro: Elsevier, 2017.</span>
+      </li>
+      <li>
+        <span class="ref-num">3</span>
+        <span>INTEL CORPORATION. <strong>How Intel Processors Work</strong>. Disponível em: https://www.intel.com.br/content/www/br/pt/gaming/resources/cpu-architecture.html. Acesso em: 15 jun. 2026.</span>
+      </li>
+      <li>
+        <span class="ref-num">4</span>
+        <span>BRASIL. Ministério da Educação. <strong>Base Nacional Comum Curricular (BNCC)</strong> — Competências Digitais. Brasília: MEC, 2018. Disponível em: http://basenacionalcomum.mec.gov.br.</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div style="font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:8px;">💻 HardwareExplorer</div>
+  <strong>Objeto Digital de Aprendizagem — Hardware e seus Componentes</strong>
+  <p>Disciplina: Informática na Educação · UFR Sistemas de Informação · 2026/1</p>
+  <p style="margin-top:4px;">Profa. Jeanne Caroline O. Moura · Apresentação: 22/06/2026</p>
+</footer>
+
+<script>
+  // === PROGRESS ===
+  function updateProgress() {
+    const sections = ['info','objetivos','componentes','mapa','quiz-section','glossario','referencias'];
+    let visited = parseInt(localStorage.getItem('hw_progress') || '0');
+    const pct = Math.round((visited / sections.length) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-pct').textContent = pct + '%';
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        let visited = parseInt(localStorage.getItem('hw_progress') || '0');
+        visited = Math.min(7, visited + 1);
+        localStorage.setItem('hw_progress', visited);
+        updateProgress();
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+  updateProgress();
+
+  // === COMPONENTES ===
+  function showComp(id, btn) {
+    document.querySelectorAll('.comp-card').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.comp-nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('card-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // === MAPA ===
+  function showMbInfo(name, text) {
+    const panel = document.getElementById('mb-info');
+    panel.innerHTML = '<span style="font-size:1.5rem;">✅</span><span><strong>' + name + ':</strong> ' + text + '</span>';
+    panel.style.background = 'var(--green-light)';
+    panel.style.borderColor = 'var(--green-mid)';
+    panel.style.color = '#166534';
+  }
+
+  // === QUIZ ===
+  const questions = [
+    {
+      q: "Qual componente é considerado o 'cérebro' do computador, responsável por processar todas as instruções?",
+      opts: ["Memória RAM", "HD (Hard Disk)", "CPU (Processador)", "Placa de Vídeo"],
+      ans: 2,
+      fb: "✅ Correto! A CPU (Central Processing Unit) é o processador central — ela executa todas as instruções e cálculos do computador.",
+      fb_wrong: "❌ Incorreto. O componente chamado de 'cérebro' do computador é a CPU (Processador), pois processa todas as instruções do sistema."
+    },
+    {
+      q: "A memória RAM é classificada como memória volátil. O que isso significa?",
+      opts: ["Ela armazena dados permanentemente", "Seus dados são perdidos quando o computador é desligado", "Ela funciona apenas com energia solar", "Ela é mais lenta que o HD"],
+      ans: 1,
+      fb: "✅ Exato! Memória volátil perde todos os dados quando perde energia. Por isso, é preciso salvar os arquivos no HD ou SSD.",
+      fb_wrong: "❌ Errado. Memória volátil significa que os dados são apagados quando o computador é desligado. Por isso você precisa salvar seu trabalho!"
+    },
+    {
+      q: "Qual é a principal diferença entre um SSD e um HD?",
+      opts: ["O SSD armazena menos dados que o HD", "O SSD usa discos magnéticos giratórios", "O SSD não tem partes móveis e é muito mais rápido que o HD", "O HD é sempre mais caro que o SSD"],
+      ans: 2,
+      fb: "✅ Perfeito! O SSD (Solid State Drive) não possui peças mecânicas — armazena dados em chips de memória flash, sendo muito mais rápido e resistente.",
+      fb_wrong: "❌ Incorreto. A principal diferença é que o SSD não possui partes móveis (usa chips flash), tornando-o muito mais rápido e resistente que o HD mecânico."
+    },
+    {
+      q: "Qual componente conecta e permite a comunicação entre todos os outros componentes do computador?",
+      opts: ["CPU", "Fonte de alimentação", "Memória RAM", "Placa-mãe"],
+      ans: 3,
+      fb: "✅ Correto! A placa-mãe é o hub central — ela possui os slots e barramentos que permitem que CPU, RAM, GPU e armazenamento se comuniquem.",
+      fb_wrong: "❌ Errado. A placa-mãe (Motherboard) é o componente que conecta tudo — é nela que CPU, RAM, GPU e armazenamento se encaixam e se comunicam."
+    },
+    {
+      q: "Uma pessoa reclama que o computador trava quando abre muitos programas ao mesmo tempo. Qual componente provavelmente precisa ser atualizado?",
+      opts: ["Placa de vídeo", "Fonte de alimentação", "Memória RAM", "HD"],
+      ans: 2,
+      fb: "✅ Isso mesmo! A RAM é a memória de trabalho. Pouca RAM significa que o computador não consegue manter muitos programas ativos ao mesmo tempo.",
+      fb_wrong: "❌ Não é essa opção. Quando o computador trava com muitos programas abertos, o problema geralmente é a RAM insuficiente — ela guarda os programas em uso."
+    },
+    {
+      q: "Qual componente é especialmente importante para jogar videogames ou editar vídeos em alta resolução?",
+      opts: ["Fonte de alimentação potente", "GPU (Placa de Vídeo)", "Mais espaço em disco (HD/SSD)", "Teclado mecânico"],
+      ans: 1,
+      fb: "✅ Correto! A GPU (Placa de Vídeo) é especializada em renderizar gráficos. Para jogos e edição de vídeo, uma GPU dedicada faz enorme diferença.",
+      fb_wrong: "❌ Incorreto. Para jogos e edição de vídeo, o componente mais importante é a GPU (Placa de Vídeo), pois ela processa todos os cálculos gráficos."
+    },
+    {
+      q: "Qual é a função da Fonte de Alimentação (PSU) no computador?",
+      opts: ["Armazenar dados do sistema", "Processar gráficos 3D", "Converter energia da tomada (CA) em corrente adequada para os componentes (CC)", "Conectar o teclado ao computador"],
+      ans: 2,
+      fb: "✅ Perfeito! A PSU converte a corrente alternada (CA) da tomada em corrente contínua (CC) nas voltagens certas para cada componente.",
+      fb_wrong: "❌ Errado. A fonte de alimentação converte a energia elétrica da tomada (corrente alternada) nas voltagens de corrente contínua que os componentes precisam."
+    },
+    {
+      q: "O que significa dizer que um processador tem 4 núcleos (quad-core)?",
+      opts: ["Ele tem 4 ventiladores de resfriamento", "Ele pode executar 4 tarefas simultaneamente de forma independente", "Ele usa 4 tipos diferentes de memória", "Ele consome 4 vezes mais energia"],
+      ans: 1,
+      fb: "✅ Excelente! Cada núcleo é uma unidade de processamento independente. Com 4 núcleos, a CPU pode processar 4 fluxos de instruções ao mesmo tempo.",
+      fb_wrong: "❌ Não é isso. Núcleos são unidades de processamento independentes. Com 4 núcleos, o processador pode executar 4 tarefas simultaneamente, melhorando o desempenho."
+    }
+  ];
+
+  let current = 0, score = 0, answered = false;
+
+  function renderQuestion() {
+    const q = questions[current];
+    document.getElementById('q-label').textContent = 'Questão ' + (current+1) + ' de ' + questions.length;
+    document.getElementById('q-num').textContent = 'Questão ' + (current+1) + ' de ' + questions.length;
+    document.getElementById('q-text').textContent = q.q;
+    document.getElementById('quiz-prog').style.width = ((current+1)/questions.length*100) + '%';
+    const optsEl = document.getElementById('q-opts');
+    optsEl.innerHTML = '';
+    q.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-option';
+      btn.textContent = opt;
+      btn.onclick = () => selectAnswer(i);
+      optsEl.appendChild(btn);
+    });
+    document.getElementById('q-feedback').style.display = 'none';
+    document.getElementById('q-feedback').className = 'quiz-feedback';
+    document.getElementById('btn-next').style.display = 'none';
+    document.getElementById('score-display').textContent = score;
+    answered = false;
+  }
+
+  function selectAnswer(i) {
+    if (answered) return;
+    answered = true;
+    const q = questions[current];
+    const opts = document.querySelectorAll('.quiz-option');
+    opts.forEach(o => o.disabled = true);
+    const fb = document.getElementById('q-feedback');
+    if (i === q.ans) {
+      opts[i].classList.add('correct');
+      fb.textContent = q.fb;
+      fb.className = 'quiz-feedback correct-fb';
+      score++;
+    } else {
+      opts[i].classList.add('wrong');
+      opts[q.ans].classList.add('correct');
+      fb.textContent = q.fb_wrong;
+      fb.className = 'quiz-feedback wrong-fb';
+    }
+    fb.style.display = 'block';
+    document.getElementById('score-display').textContent = score;
+    document.getElementById('btn-next').style.display = 'inline-flex';
+    if (current === questions.length - 1) {
+      document.getElementById('btn-next').textContent = 'Ver resultado 🏆';
+    }
+  }
+
+  function nextQuestion() {
+    current++;
+    if (current >= questions.length) {
+      showResult();
+    } else {
+      renderQuestion();
+    }
+  }
+
+  function showResult() {
+    document.getElementById('quiz-body').style.display = 'none';
+    const res = document.getElementById('quiz-result');
+    res.style.display = 'block';
+    const pct = Math.round(score/questions.length*100);
+    document.getElementById('result-score').textContent = score + '/' + questions.length;
+    let emoji = '🎉', msg = '';
+    if (pct >= 87) { emoji = '🏆'; msg = 'Excelente! Você dominou os componentes de hardware!'; }
+    else if (pct >= 62) { emoji = '👍'; msg = 'Muito bom! Revise os pontos que errou e tente novamente.'; }
+    else if (pct >= 37) { emoji = '📚'; msg = 'Continue estudando! Releia o conteúdo e tente de novo.'; }
+    else { emoji = '💪'; msg = 'Não desanime! Revise todos os componentes e tente novamente.'; }
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-msg').textContent = msg;
+    document.getElementById('result-detail').innerHTML =
+      '<strong>Resumo:</strong> Você acertou ' + score + ' de ' + questions.length + ' questões (' + pct + '%).<br>' +
+      (pct >= 75 ? '✅ Você demonstrou compreensão sólida dos componentes de hardware!' : '📖 Recomendamos rever a seção de componentes antes de tentar novamente.');
+  }
+
+  function resetQuiz() {
+    current = 0; score = 0; answered = false;
+    document.getElementById('quiz-body').style.display = 'block';
+    document.getElementById('quiz-result').style.display = 'none';
+    renderQuestion();
+  }
+
+  renderQuestion();
+</script>
+</body>
+</html>
